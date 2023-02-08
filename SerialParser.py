@@ -1,31 +1,48 @@
-import serial
-print(serial.version)
+import csv
+import json
 
-s = input("ttyACM: ")
+def parse(s):
+  
+  parsedstr = ["","",""]
+  aux = s.split(" ")
+  parsedstr[2]=aux[2]
+  aux2 = aux[1].split("}\\")
+  a16 = aux2[0].split("\"a16\":")
+  a16 = a16[1].split(",")
+  a16 = a16[0].split("\"")
+  parsedstr[0] = a16[1]
+
+  d = aux2[0].split("\"D\":")
+  d = d[1].split(",")
+  d = d[0].split("\'")
+  parsedstr[1] = d[0]
+ 
+  return parsedstr
 
 
-ser = serial.Serial(
+
+
+var = input("Input the name of the file you want to parse: ")
+
+with open(var+".txt",'r') as f:
+  
+  with open(var+'.csv', 'w', newline='') as file:
+    
+    writer = csv.writer(file)
+    writer.writerow(["TagID", "Distance", "Timestamp"])
+    lines = f.readline()
    
-# Serial Port to read the data from
-         port='/dev/ttyACM'+ s,
- 
-        #Rate at which the information is shared to the communication channel
-        baudrate = 9600,
-   
-        #Applying Parity Checking (none in this case)
-        parity=serial.PARITY_NONE,
- 
-       # Pattern of Bits to be read
-        stopbits=serial.STOPBITS_ONE,
-     
-        # Total number of bits to be read
-        bytesize=serial.EIGHTBITS,
- 
-        # Number of serial commands to accept before timing out
-        timeout=1
-)
-# Pause the program for 1 second to avoid overworking the serial port
-while 1:
-        x=ser.readline()
-        print x
+    while lines != "":
+      
+      lines = f.readline()
+      if lines == "":
+            break
+      parsed = parse(lines)
+      writer.writerow([parsed[0], parsed[1], parsed[2]])
+
+  file.close()
+
+f.close()
+
+
 
