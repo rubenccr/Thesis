@@ -26,7 +26,8 @@ ser = serial.Serial(
 ser.readline()
 #q = Queue(maxsize = 20)
 ip = input("IP: ")
-c=MQTT_Pub.startbroker(ip)
+brokerid = input("Name your publisher: ")
+c=MQTT_Pub.startbroker(ip,brokerid)
 
 
 while(True):

@@ -14,10 +14,10 @@ def on_disconnect(client, userdata, flags, rc=0):
             print("Disconnected result code "+str(rc))
             
 
-def startbroker(addr):
+def startbroker(addr, brokerid):
 
     broker=addr #change 
-    client = mqtt.Client("broker1")
+    client = mqtt.Client(brokerid)
     client.on_connect=on_connect
     client.on_disconnect=on_disconnect
     client.on_log=on_log           
