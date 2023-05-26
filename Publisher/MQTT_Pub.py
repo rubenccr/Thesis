@@ -17,7 +17,7 @@ def on_disconnect(client, userdata, flags, rc=0):
 def startbroker(addr, brokerid):
 
     broker=addr #change 
-    client = mqtt.Client(brokerid)
+    client = mqtt.Client(client_id=brokerid)
     client.on_connect=on_connect
     client.on_disconnect=on_disconnect
     client.on_log=on_log           
