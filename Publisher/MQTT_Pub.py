@@ -1,7 +1,7 @@
 import paho.mqtt.client as mqtt
 import time
 
-def on_log(client, userdata, level, buff):
+def publog(client, userdata, level, buff):
            print("Log: "+buff)
            
 def on_connect(client, userdate, flags, rc):
@@ -14,21 +14,54 @@ def on_disconnect(client, userdata, flags, rc=0):
             print("Disconnected result code "+str(rc))
             
 
-def startbroker(addr, brokerid):
+def startpub(addr, pubid):
 
-    broker=addr #change 
-    client = mqtt.Client(client_id=brokerid)
+    client = mqtt.Client(client_id="LeastSquares")
     client.on_connect=on_connect
     client.on_disconnect=on_disconnect
-    client.on_log=on_log           
-    print("Connecting to broker ", broker)
-    client.connect(broker,1886)
+    client.on_log=publog           
+    print("Connecting to broker ", addr)
+    client.connect(addr,1886)
     client.loop_start()
     return client
 
-def publish(client,msg):
 
-    client.publish("test/distances",msg)
-    #time.sleep(4)
-    #client.loop_stop()
-    #client.disconnect()
+    
+def publishLS(client,msg):
+
+    client.publish("test/lsquares",msg)    
+    
+    
+
+        
+def on_connectsub(client, userdata, flags, rc):
+           if rc==0:
+              print("Client Connected")
+              global connected
+              connected=True
+           else:
+              print("Client is not connected")
+              
+def on_messagesub(client, userdata, message):
+            (id,range,timestamp) = message.payload.decode("utf-8").split(",")
+            print(id,range,timestamp)
+            
+            
+
+ 
+            
+            
+
+def startsub(addr):
+
+    
+    client = mqtt.Client("LS")
+    client.on_message=on_message
+    client.on_connect=on_connect
+    client.connect(addr,1886)
+    client.loop_start()
+    return client
+
+def subscribe(client):
+
+    client.subscribe("test/lsquares")   

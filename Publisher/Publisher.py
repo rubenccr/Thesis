@@ -17,22 +17,18 @@ ser = serial.Serial(
         parity=serial.PARITY_NONE,
         # Pattern of Bits to be read
         stopbits=serial.STOPBITS_ONE,
-        # Total number of bits to be172.17.71.195 read
+        # Total number of bits to be read
         bytesize=serial.EIGHTBITS,
         # Number of serial commands to accept before timing out
         timeout=1
 )
 
 ser.readline()
-#q = Queue(maxsize = 20)
-ip = input("IP: ")
-brokerid = input("Name your publisher: ")
-c=MQTT_Pub.startbroker(ip,brokerid)
+c=MQTT_Pub.startbroker(sys.argv[1],sys.argv[2])
 
 
 while(True):
      t = time.time_ns()
-     print(t)
      id,range = UWB_Parser.parse(str(ser.readline()))
      print(id,range,t)
      MQTT_Pub.publish(c, '{},{},{}'.format(id,range,t))
