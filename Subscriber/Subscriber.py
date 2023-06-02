@@ -30,7 +30,7 @@ def on_range(client, userdata, message):
             
 global message_queue
 message_queue = queue.Queue()
-client = mqtt.Client("Sub")
+client = mqtt.Client(sys.argv[2])
 client.on_connect=on_connect
 client.on_message=on_range
 client.connect(sys.argv[1],1886)

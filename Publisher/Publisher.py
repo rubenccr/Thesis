@@ -2,9 +2,24 @@ import serial
 import time
 from queue import Queue
 from threading import Thread
-import MQTT_Pub
+import paho.mqtt.client as mqtt
 import UWB_Parser
+import sys
 
+
+def publog(client, userdata, level, buff):
+           print("Log: "+buff)
+           
+def on_connect(client, userdate, flags, rc):
+           if rc==0:
+              print("connected OK")
+           else:
+              print("Bad connection return code=", rc)
+              
+def on_disconnect(client, userdata, flags, rc=0):
+            print("Disconnected result code "+str(rc))
+      
+      
 #Input the serial port ID
 s = input("ttyACM: ")
        
@@ -24,14 +39,21 @@ ser = serial.Serial(
 )
 
 ser.readline()
-c=MQTT_Pub.startbroker(sys.argv[1],sys.argv[2])
+client = mqtt.Client(client_id=sys.argv[2])
+client.on_connect=on_connect
+client.on_disconnect=on_disconnect
+client.on_log=publog         
+print("Connecting to broker ", sys.argv[1])
+client.connect(sys.argv[1],1886)
+client.loop_start()
+   
 
 
 while(True):
      t = time.time_ns()
      id,range = UWB_Parser.parse(str(ser.readline()))
      print(id,range,t)
-     MQTT_Pub.publish(c, '{},{},{}'.format(id,range,t))
+     client.publish("test/lsquares", '{},{},{}'.format(id,range,t))
   
         
 
