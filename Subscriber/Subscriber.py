@@ -18,10 +18,11 @@ def on_connect(client, userdata, flags, rc):
               print("Client is not connected")
               
 def on_range(client, userdata, message):
-            (id,range,timestamp) = message.payload.decode("utf-8").split(",")
+            print(message.payload.decode("utf-8"))
+            (ex,ey,ez) = message.payload.decode("utf-8").split(",")
             # print("callack", id,range,timestamp)
             global message_queue 
-            message_queue.put((id,range,timestamp))
+            message_queue.put((ex,ey,ez))
             
             
             
@@ -38,8 +39,8 @@ client.subscribe("test/lsquares")
 client.loop_start()
 
 while True:
-    (id,range,timestamp) = message_queue.get()
-    print("Data received: ", id,range,timestamp)
+    (ex,ey,ez) = message_queue.get()
+    print("Data received: ", ex,ey,ez)
     
     
 
