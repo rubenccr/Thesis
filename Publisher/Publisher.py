@@ -51,10 +51,14 @@ client.loop_start()
 
 
 while(True):
-     t = time.time_ns()
-     id,range = UWB_Parser.parse(str(ser.readline()))
-     print(sys.argv[2],sys.argv[3],sys.argv[4],sys.argv[5],id,range,t)
-     client.publish("test/distances", '{},{},{},{},{},{},{}'.format(sys.argv[2],sys.argv[3],sys.argv[4],sys.argv[5],id,range,t))
+     s = UWB_Parser.parse(str(ser.readline()))
+     if(s=="invalid"):
+         print("no message")
+     else:
+         id,range =  s
+         t = time.time_ns()
+         print(sys.argv[2],sys.argv[3],sys.argv[4],sys.argv[5],id,range,t)
+         client.publish("test/distances", '{},{},{},{},{},{},{}'.format(sys.argv[2],sys.argv[3],sys.argv[4],sys.argv[5],id,range,t))
   
         
 

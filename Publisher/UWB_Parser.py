@@ -1,5 +1,7 @@
 def parse(s):
   print(s)
+  if(len(s)<70):
+      return "invalid"
   parsedstr = ["",""]
   aux = s.split(" ")
   #parsedstr[2]=aux[2]
