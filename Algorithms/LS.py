@@ -10,26 +10,29 @@ global ANCHORS
 ANCHORS = {}
 
 
-def equations_v2 ( guess ):
+def equations_v2 ( guess, id,ANCHORS ):
     x, y , z = guess
    
     return [
           (x - a["x"]) ** 2 
         + (y - a["y"]) ** 2 
         + (z - a["z"]) ** 2 
-        - (a["range"]) ** 2 for a in ANCHORS.values()
+        - (a["range"]) ** 2 for a in ANCHORS[id].values()
     ]
 
 def test_ls():
   global ANCHORS  
-  ANCHORS_TEST = {
-    "pub1": { 
+  ANCHORS_TEST = {}
+  ANCHORS_TEST[0] = {
+    "pub1": {
+        "id": 0, 
         "x": 5,
         "y": 0,
         "z": 0.0,
         "range": 0
     }, 
     "pub2": {
+        "id": 0,
         "x": 0,
         "y": 5,
         "z": 0.0,
@@ -37,18 +40,21 @@ def test_ls():
 
     },
     "pub3": {
+        "id": 0,
         "x": 0,
         "y": 0,
         "z": 0,
         "range": 5
     },
     "pub4": {
+        "id": 0,
         "x": 5,
         "y": 5,
         "z": 0,
         "range": 5
     },
     "pub5": {
+        "id": 0,
         "x": 5,
         "y": 6,
         "z": 0,
@@ -57,7 +63,7 @@ def test_ls():
   }
   iguess = (0,0,0)
   ANCHORS = ANCHORS_TEST
-  results = least_squares(equations_v2, iguess)
+  results = least_squares(equations_v2, iguess,args=(0,ANCHORS))
   print(results.x)
 
 #test_ls()
@@ -94,7 +100,9 @@ while True:
     try:
         (aid, ax, ay, az, id,range,timestamp) = \
             message_queue.get(block=True,timeout=1)
-        ANCHORS[aid] = {  
+        if id not in ANCHORS.keys():
+                ANCHORS[id] = {}
+        ANCHORS[id][aid] = {  
             "x": ax, 
             "y": ay, 
             "z": az,
@@ -102,9 +110,9 @@ while True:
             "timestamp": timestamp
         }
         #print(ANCHORS)
-        if len(ANCHORS) >= 3:
+        if len(ANCHORS[id]) >= 3:
             iguess = (0,0,0)
-            results = least_squares(equations_v2, iguess)
+            results = least_squares(equations_v2, iguess, args=(id,ANCHORS))
             #print(results.x)
             client.publish("test/lsquares",str(results.x[0])+","+str(results.x[1])+","+str(results.x[2]))
 
