@@ -1,0 +1,15 @@
+1on1 coms
+config network
+run nma
+run nmi
+
+on other module
+config network
+run nmt
+
+aurs updates rate
+
+first number is mobile 
+second number stationary
+
+multiples of 100 ms
