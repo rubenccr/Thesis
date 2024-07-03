@@ -3,6 +3,7 @@ import time
 import queue
 import scipy
 import csv
+from math import sqrt
 from scipy.optimize import least_squares
 
 global ANCHORS 
@@ -106,7 +107,7 @@ with open(var+".csv", 'r', newline='') as f:
   with open(var+'LS.csv', 'w', newline='') as file:
     
     writer = csv.writer(file,delimiter=';')
-    writer.writerow(["Anchor/Range","Anchor/Range","Anchor/Range", "Anchor/Range","LS_Estimated","DWM_Estimated","Timestamp","X_DWM","Y_DWM","X_LS","Y_LS","GROUND_X","GROUND_Y","ERRO_X_LS","ERRO_Y_LS","ERRO_X_DWM","ERRO_Y_DWM"])
+    writer.writerow(["Anchor/Range","Anchor/Range","Anchor/Range", "Anchor/Range","LS_Estimated","DWM_Estimated","Timestamp","X_DWM","Y_DWM","X_LS","Y_LS","GROUND_X","GROUND_Y","ERRO_X_LS","ERRO_Y_LS","ERRO_X_DWM","ERRO_Y_DWM","ERRO LS","ERRO_DWM"])
     lines = csv.reader(f, delimiter=';', quotechar='|')
     iguess = (0.0,0.0,0.0) 
     
@@ -150,7 +151,9 @@ with open(var+".csv", 'r', newline='') as f:
         erroyls = float(gty) - float(results.x[1].round(2))
         erroxdwm = float(gtx) - float(dwm[0].split("[")[1])
         erroydwm = float(gty) - float(dwm[1])
-        writer.writerow([l[0],l[1],l[2],l[3],rlist,l[4],l[5],dwm[0].split("[")[1],dwm[1],results.x[0].round(2),results.x[1].round(2),gtx,gty,round(erroxls,2),round(erroyls,2),round(erroxdwm,2),round(erroydwm,2)])
+        errols = sqrt((erroxls*erroxls)+(erroyls*erroyls))
+        errodwm = sqrt((erroxdwm*erroxdwm)+(erroydwm*erroydwm))
+        writer.writerow([l[0],l[1],l[2],l[3],rlist,l[4],l[5],dwm[0].split("[")[1],dwm[1],results.x[0].round(2),results.x[1].round(2),gtx,gty,round(erroxls,2),round(erroyls,2),round(erroxdwm,2),round(erroydwm,2),round(errols,2),round(errodwm,2)])
       flag=True
   file.close()
 f.close()
