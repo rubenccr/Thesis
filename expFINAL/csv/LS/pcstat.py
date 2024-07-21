@@ -23,7 +23,7 @@ var = sys.argv[1]
 
 with open('results.csv', 'w', newline='') as file:
  writer = csv.writer(file,delimiter=';')
- writer.writerow(["Control Point","Avg. Error LS","Avg. Error DWM"])
+ writer.writerow(["Control Point","Avg. Error LS","STD. LS","Variance LS","Avg. Error DWM","STD. DWM","Variance DWM"])
  for i in range(1,int(var)+1):
    
      if(i==7):
@@ -33,7 +33,11 @@ with open('results.csv', 'w', newline='') as file:
        df = pd.read_csv("pc"+str(i)+"LS.csv",sep=';')
        avgerrorLS = df['ERRO LS'].mean()
        avgerrordwm = df['ERRO_DWM'].mean()
-       writer.writerow(["pc"+str(i),str(avgerrorLS.round(2)),str(avgerrordwm.round(2))])
+       desvioLS = df['ERRO LS'].std()
+       desvioDWM = df['ERRO_DWM'].std() 
+       varLS = df['ERRO LS'].var()
+       varDWM = df['ERRO_DWM'].var()
+       writer.writerow(["pc"+str(i),str(avgerrorLS.round(2)),str(desvioLS.round(2)),str(varLS.round(2)),str(avgerrordwm.round(2)),str(desvioDWM.round(2)),str(varDWM.round(2))])
      
 
 
