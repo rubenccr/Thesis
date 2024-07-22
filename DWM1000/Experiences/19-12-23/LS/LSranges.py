@@ -20,6 +20,8 @@ j=1
 iguess = (0.0,0.0,0.0)
 ANCHORS[id] = {} 
 
+expl = [(2,4),(1,1),(3,6),(3,1)]
+
 for i in range(1,5):
    
    j=1
@@ -32,7 +34,7 @@ for i in range(1,5):
   
    with open("exp"+str(i)+"LS.csv", 'w', newline='') as f:
      writer = csv.writer(f,delimiter=';')
-     writer.writerow(["LS_X","LS_Y","LS_Z"])
+     writer.writerow(["LS_X","LS_Y","LS_Z","ERRO_LS"])
      for k in range(minsize):
 
         aid =[df['ID'][0],df2['ID'][0],df3['ID'][0]]
@@ -49,8 +51,12 @@ for i in range(1,5):
           "range": arange[n]
           }
           #print(ANCHORS)
+        
         results = least_squares(equations_v2, iguess, args=(id,ANCHORS))
-        writer.writerow([results.x[0].round(2),results.x[1].round(2),results.x[2].round(2)])
+        erroxls = float(expl[i-1][0]) - float(results.x[0])
+        erroyls = float(expl[i-1][1]) - float(results.x[1]) 
+        errols = sqrt((erroxls*erroxls)+(erroyls*erroyls))
+        writer.writerow([results.x[0].round(2),results.x[1].round(2),results.x[2].round(2),round(errols,2)])
      
    f.close()    
 

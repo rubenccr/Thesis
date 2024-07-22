@@ -107,12 +107,13 @@ with open("pc3.csv", 'r', newline='') as f:
   with open('pc3specificLS.csv', 'w', newline='') as file:
     
     writer = csv.writer(file,delimiter=';')
-    writer.writerow(["Anchor/Range","Anchor/Range","Anchor/Range", "Anchor/Range","LS_Estimated","DWM_Estimated","Timestamp","X_DWM","Y_DWM","X_LS","Y_LS","GROUND_X","GROUND_Y","ERRO_X_LS","ERRO_Y_LS","ERRO_X_DWM","ERRO_Y_DWM","ERRO LS","ERRO_DWM","Using"])
+    writer.writerow(["Anchor/Range","Anchor/Range","Anchor/Range", "Anchor/Range","LS_Estimated","DWM_Estimated","Timestamp","X_DWM","Y_DWM","X_LS","Y_LS","GROUND_X","GROUND_Y","ERRO_X_LS","ERRO_Y_LS","ERRO_X_DWM","ERRO_Y_DWM","ERRO LS","ERRO_DWM","Using","Simple Range"])
     lines = csv.reader(f, delimiter=';', quotechar='|')
     iguess = (0.0,0.0,0.0) 
     
     for l in lines:
       temp=[]
+      temp2=[]
       ANCHORS[id] = {}
       if(flag==True):
       
@@ -134,7 +135,7 @@ with open("pc3.csv", 'r', newline='') as f:
               #print(ay)
               #print(az)
               #print(arange)
-          
+              temp2.append(str(aid)+" "+str(arange))
               if(aid!="P9"):
                 temp.append(aid)
                 ANCHORS[id][aid] = {
@@ -160,7 +161,7 @@ with open("pc3.csv", 'r', newline='') as f:
          erroydwm = float(gty) - float(dwm[1])
          errols = sqrt((erroxls*erroxls)+(erroyls*erroyls))
          errodwm = sqrt((erroxdwm*erroxdwm)+(erroydwm*erroydwm))
-         writer.writerow([l[0],l[1],l[2],l[3],rlist,l[4],l[5],dwm[0].split("[")[1],dwm[1],results.x[0].round(2),results.x[1].round(2),gtx,gty,round(erroxls,2),round(erroyls,2),round(erroxdwm,2),round(erroydwm,2),round(errols,2),round(errodwm,2),temp])
+         writer.writerow([l[0],l[1],l[2],l[3],rlist,l[4],l[5],dwm[0].split("[")[1],dwm[1],results.x[0].round(2),results.x[1].round(2),gtx,gty,round(erroxls,2),round(erroyls,2),round(erroxdwm,2),round(erroydwm,2),round(errols,2),round(errodwm,2),temp,temp2])
       flag=True
   file.close()
 f.close()
